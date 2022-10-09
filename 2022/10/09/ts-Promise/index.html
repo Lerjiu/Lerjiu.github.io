@@ -1,0 +1,218 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ts-Promise | 李文豪の博客</title><meta name="keywords" content="typescript,前端"><meta name="author" content="Lerjiu"><meta name="copyright" content="Lerjiu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="PromisePromise的含义异步编程的一种解决方案。Promise可以看做一个容器，里面保存着未来才会结束的事件(通常是异步操作)的结果。从语法上讲，Promise是对象，下图为Promise对象结构，PromiseState代表状态，PromiseResult代表结果。后面会详细说明。  Promise对象有以下两个特点  对象的状态不受外界影响。Promise代表一个异步操作，有三个状态">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ts-Promise">
+<meta property="og:url" content="https://lerjiu.github.io/2022/10/09/ts-Promise/index.html">
+<meta property="og:site_name" content="李文豪の博客">
+<meta property="og:description" content="PromisePromise的含义异步编程的一种解决方案。Promise可以看做一个容器，里面保存着未来才会结束的事件(通常是异步操作)的结果。从语法上讲，Promise是对象，下图为Promise对象结构，PromiseState代表状态，PromiseResult代表结果。后面会详细说明。  Promise对象有以下两个特点  对象的状态不受外界影响。Promise代表一个异步操作，有三个状态">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lerjiu.github.io/img/cover3.jpg">
+<meta property="article:published_time" content="2022-10-09T12:12:09.000Z">
+<meta property="article:modified_time" content="2022-10-09T14:01:02.772Z">
+<meta property="article:author" content="Lerjiu">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lerjiu.github.io/img/cover3.jpg"><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="https://lerjiu.github.io/2022/10/09/ts-Promise/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ts-Promise',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-10-09 22:01:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/cover3.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">李文豪の博客</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ts-Promise</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-10-09T12:12:09.000Z" title="发表于 2022-10-09 20:12:09">2022-10-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-10-09T14:01:02.772Z" title="更新于 2022-10-09 22:01:02">2022-10-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ts-Promise"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h2><h4 id="Promise的含义"><a href="#Promise的含义" class="headerlink" title="Promise的含义"></a>Promise的含义</h4><p>异步编程的一种解决方案。<code>Promise</code>可以看做一个容器，里面保存着未来才会结束的事件(通常是异步操作)的结果。从语法上讲，<code>Promise</code>是对象，下图为<code>Promise</code>对象结构，<code>PromiseState</code>代表状态，<code>PromiseResult</code>代表结果。后面会详细说明。</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/xYEeER"><img src="https://s1.ax1x.com/2022/10/09/xYEeER.png" alt="Promise"></a></p>
+<p><code>Promise</code>对象有以下两个特点</p>
+<ul>
+<li>对象的状态不受外界影响。<code>Promise</code>代表一个异步操作，有三个状态：<code>pending</code>(进行中)、<code>fulfilled</code>(已成功)、<code>rejected</code>(已失败)。只有异步操作的结果，可以决定当前是哪一种状态。其他任何操作都无法改变这个状态。</li>
+<li>状态一旦改变，就会永久维持，任何时候都会得到这个结果。<code>Promise</code>状态的改变只有两种可能：从<code>pending</code>到<code>fulfilled</code>或从<code>pending</code>到<code>rejected</code>。如果是在状态已经发生改变之后再去添加回调函数，也会立即得到这个结果。这与事件的监听不同，不会因为状态改变时没有回调函数而错过。</li>
+</ul>
+<p>在实际代码中，我们一般用<code>resolve</code>与<code>reject</code>分别对应<code>fulfilled</code>与<code>rejected</code>这两种状态。</p>
+<p><code>Promise</code>也有一些缺陷。</p>
+<ul>
+<li>无法取消<code>Promise</code>，一旦新建它就会立即执行，无法中途取消。</li>
+<li>如果不设置回调函数，<code>Promise</code>内部抛出的错误，不会反应到外部。</li>
+<li>当处于<code>pending</code>状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。</li>
+</ul>
+<h4 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h4><p>创建<code>Promise</code>实例</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promise = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// ... some code</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="comment">/* 异步操作成功 */</span>)&#123;</span><br><span class="line">    <span class="title function_">resolve</span>(value);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_">reject</span>(error);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><code>Promise</code>构造函数接受一个函数为参数，该函数要求两个参数<code>resolve</code>、<code>reject</code>。它们是两个函数，由JS提供，不用自己设置。</p>
+<p><code>resolve</code>函数的作用是，将<code>Promise</code>对象的状态从“未完成”变为“成功”（即从<code>pending</code> 变为 <code>resolved</code>），在异步操作成功时调用，并将异步操作的结果，作为参数传递出去；<code>reject</code>函数的作用是，将<code>Promise</code>对象的状态从“未完成”变为“失败”（即从 <code>pending</code> 变为 <code>rejected</code>），在异步操作失败时调用，并将异步操作报出的错误，作为参数传递出去。(这里提到的两个函数将结果信息传递出去，要我们自己定义回调函数来接收，这样才能获取到传递的信息，执行自己的业务逻辑)</p>
+<p>在<code>Promise</code>中，我们要进行某个异步操作，如果执行成功了，就调用<code>resolve</code>，否则调用<code>rejecrt</code>，这里的条件是基于具体的异步操作的。比如我们常用的<code>axios</code>，其将请求这个异步操作封装成了<code>Promise</code>，在内部判断如果请求成功了，就会执行<code>resolve</code>，并将得到的数据作为参数传递出去。然后我们定义的对应回调函数可以接收到传递的消息。下面给出与这部分相关的<code>Promise.then</code>的介绍。</p>
+<p><code>Promise</code>生成实例以后，可以用<code>then</code>方法，分别指定<code>resolved</code>状态和<code>rejected</code>状态的回调函数。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">promise.<span class="title function_">then</span>(<span class="function"><span class="params">value</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// success</span></span><br><span class="line">&#125;, <span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// failure</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><code>then</code>方法可以接受两个回调函数作为参数。第一个回调函数是<code>Promise</code>对象的状态变为<code>resolved</code>时调用，第二个回调函数是<code>Promise</code>对象的状态变为<code>rejected</code>时调用。这两个函数都是可选的，不一定要提供。它们都接受<code>Promise</code>对象传出的值作为参数。</p>
+<p><strong>一个例子</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> promise = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span>(<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Promise&#x27;</span>);</span><br><span class="line">  <span class="title function_">resolve</span>();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">promise.<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;resolved.&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Hi!&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Promise</span></span><br><span class="line"><span class="comment">// Hi!</span></span><br><span class="line"><span class="comment">// resolved</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，Promise 新建后立即执行，所以首先输出的是<code>Promise</code>。然后，<code>then</code>方法指定的回调函数，将在当前脚本所有同步任务执行完才会执行，所以<code>resolved</code>最后输出。</p>
+<p>这当然是具有合理性的，我们的业务逻辑实现会依赖异步操作的结果，因此设置了回调函数，在异步操作的结果确定之后执行，这是我们当然也希望所有的同步任务也已经执行完毕，所有的代码是在确定的环境下运行。所以这里的回调函数执行会在所有同步任务之后。</p>
+<p>如果调用<code>resolve</code>函数和<code>reject</code>函数时带有参数，那么它们的参数会被传递给回调函数。<code>reject</code>函数的参数通常是<code>Error</code>对象的实例，表示抛出的错误；<code>resolve</code>函数的参数除了正常的值以外，还可能是另一个 Promise 实例，比如像下面这样。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p1 = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> p2 = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="title function_">resolve</span>(p1);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>p1</code>和<code>p2</code>都是 <code>Promise</code> 的实例，但是<code>p2</code>的<code>resolve</code>方法将<code>p1</code>作为参数，即一个异步操作的结果是返回另一个异步操作。</p>
+<p>注意，这时<code>p1</code>的状态就会传递给<code>p2</code>，也就是说，<code>p1</code>的状态决定了<code>p2</code>的状态。如果<code>p1</code>的状态是<code>pending</code>，那么<code>p2</code>的回调函数就会等待<code>p1</code>的状态改变；如果<code>p1</code>的状态已经是<code>resolved</code>或者<code>rejected</code>，那么<code>p2</code>的回调函数将会立刻执行。</p>
+<h4 id="Promise-prototype-then"><a href="#Promise-prototype-then" class="headerlink" title="Promise.prototype.then()"></a>Promise.prototype.then()</h4><p>前面已经说过，<code>then</code>方法可以为<code>Promise</code>添加状态改变时的回调函数，除此之外，<code>then</code>方法的返回是一个<code>Promise</code>实例(不是原来的<code>Promise</code>)。因此可以采用链式写法。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">getJSON</span>(<span class="string">&quot;/posts.json&quot;</span>).<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">json</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> json.<span class="property">post</span>;</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">post</span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>getJSON</code>是一个返回<code>Promise</code>实例的函数。</p>
+<p><code>then</code>方法返回的<code>Promise</code>实例，会将回调函数中返回的结果作为实例中对应函数(<code>resolve</code>或<code>reject</code>)的参数。也就是这里第一个<code>then</code>方法返回的<code>Promise</code>实例相当于会执行这句<code>resolve(json.post)</code>。</p>
+<p>采用链式的<code>then</code>，可以指定一组按照次序调用的回调函数。这时，前一个回调函数，有可能返回的还是一个<code>Promise</code>对象（即有异步操作），这时后一个回调函数，就会等待该<code>Promise</code>对象的状态发生变化，才会被调用。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">getJSON</span>(<span class="string">&quot;/post/1.json&quot;</span>).<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">post</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">getJSON</span>(post.<span class="property">commentURL</span>);</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">comments</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;resolved: &quot;</span>, comments);</span><br><span class="line">&#125;, <span class="keyword">function</span> (<span class="params">err</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;rejected: &quot;</span>, err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，第一个<code>then</code>方法指定的回调函数，返回的是另一个<code>Promise</code>对象。这时，第二个<code>then</code>方法指定的回调函数，就会等待这个新的<code>Promise</code>对象状态发生变化。如果变为<code>resolved</code>，就调用第一个回调函数，如果状态变为<code>rejected</code>，就调用第二个回调函数。</p>
+<h4 id="Promise-prototype-catch"><a href="#Promise-prototype-catch" class="headerlink" title="Promise.prototype.catch()"></a>Promise.prototype.catch()</h4><p>只简单介绍一下<code>catch</code>的特性，这部分理解起来比较简单，可以直接看文档：<a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/promise#Promise-prototype-catch">https://es6.ruanyifeng.com/#docs/promise#Promise-prototype-catch</a></p>
+<p><code>Promise.prototype.catch()</code>方法是<code>.then(null, rejection)</code>或<code>.then(undefined, rejection)</code>的别名，用于指定发生错误时的回调函数。</p>
+<p>如果<code>Promise</code>对象状态变为<code>resolved</code>，则会调用<code>then()</code>方法指定的回调函数；如果异步操作抛出错误，状态就会变为<code>rejected</code>，就会调用<code>catch()</code>方法指定的回调函数，处理这个错误。另外，<code>then()</code>方法指定的回调函数，如果运行中抛出错误，也会被<code>catch()</code>方法捕获。</p>
+<p><code>reject()</code>方法的作用，等同于抛出错误。</p>
+<p>如果 <code>Promise</code>状态已经变成<code>resolved</code>，再抛出错误是无效的。</p>
+<p><code>Promise</code>对象的错误具有“冒泡”性质，会一直向后传递，直到被捕获为止。也就是说，错误总是会被下一个<code>catch</code>语句捕获。</p>
+<p>一般来说，不要在<code>then()</code>方法里面定义 <code>Reject</code> 状态的回调函数（即<code>then</code>的第二个参数），总是使用<code>catch</code>方法。理由是<code>catch</code>可以捕获前面<code>then</code>方法执行中的错误，也更接近同步的写法（<code>try/catch</code>）。</p>
+<h4 id="Promise-prototype-finally"><a href="#Promise-prototype-finally" class="headerlink" title="Promise.prototype.finally()"></a>Promise.prototype.finally()</h4><p><code>finally()</code>方法用于指定不管 Promise 对象最后状态如何，都会执行的操作。</p>
+<p><em><strong>参考文档：<a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/promise">https://es6.ruanyifeng.com/#docs/promise</a></strong></em></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Lerjiu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://lerjiu.github.io/2022/10/09/ts-Promise/">https://lerjiu.github.io/2022/10/09/ts-Promise/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://lerjiu.github.io" target="_blank">李文豪の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/typescript/">typescript</a><a class="post-meta__tags" href="/tags/%E5%89%8D%E7%AB%AF/">前端</a></div><div class="post_share"><div class="social-share" data-image="/img/cover3.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/10/09/learn-vue%20%E6%8F%92%E6%A7%BDslot/"><img class="next-cover" src="/img/cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">learn-vue 插槽slot</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/09/11/ts%E5%AD%A6%E4%B9%A01-%E5%9F%BA%E7%A1%80%E7%B1%BB%E5%9E%8B/" title="ts学习1-基础类型"><img class="cover" src="/img/cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-11</div><div class="title">ts学习1-基础类型</div></div></a></div><div><a href="/2022/09/14/ts%E5%AD%A6%E4%B9%A03-%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B/" title="ts学习3-接口和对象类型"><img class="cover" src="/img/cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-14</div><div class="title">ts学习3-接口和对象类型</div></div></a></div><div><a href="/2022/09/14/ts%E5%AD%A6%E4%B9%A04-%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8B/" title="ts学习4-数组类型"><img class="cover" src="/img/cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-14</div><div class="title">ts学习4-数组类型</div></div></a></div><div><a href="/2022/09/11/ts%E5%AD%A6%E4%B9%A02-%E4%BB%BB%E6%84%8F%E7%B1%BB%E5%9E%8B/" title="ts学习2-任意类型"><img class="cover" src="/img/cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-11</div><div class="title">ts学习2-任意类型</div></div></a></div><div><a href="/2022/09/14/ts%E5%AD%A6%E4%B9%A05-%E5%87%BD%E6%95%B0%E6%8B%93%E5%B1%95/" title="ts学习5-函数拓展"><img class="cover" src="/img/cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-14</div><div class="title">ts学习5-函数拓展</div></div></a></div><div><a href="/2022/09/14/ts%E5%AD%A6%E4%B9%A06-%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80%20%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B%20%E4%BA%A4%E5%8F%89%E7%B1%BB%E5%9E%8B/" title="ts学习6-类型断言 联合类型 交叉类型"><img class="cover" src="/img/cover1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-14</div><div class="title">ts学习6-类型断言 联合类型 交叉类型</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Lerjiu</div><div class="author-info__description">度过没有意义的每秒钟</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Lerjiu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:1426239779@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Promise"><span class="toc-number">1.</span> <span class="toc-text">Promise</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Promise%E7%9A%84%E5%90%AB%E4%B9%89"><span class="toc-number">1.0.1.</span> <span class="toc-text">Promise的含义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">1.0.2.</span> <span class="toc-text">基本用法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Promise-prototype-then"><span class="toc-number">1.0.3.</span> <span class="toc-text">Promise.prototype.then()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Promise-prototype-catch"><span class="toc-number">1.0.4.</span> <span class="toc-text">Promise.prototype.catch()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Promise-prototype-finally"><span class="toc-number">1.0.5.</span> <span class="toc-text">Promise.prototype.finally()</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/10/09/ts-Promise/" title="ts-Promise"><img src="/img/cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ts-Promise"/></a><div class="content"><a class="title" href="/2022/10/09/ts-Promise/" title="ts-Promise">ts-Promise</a><time datetime="2022-10-09T12:12:09.000Z" title="发表于 2022-10-09 20:12:09">2022-10-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/09/learn-vue%20%E6%8F%92%E6%A7%BDslot/" title="learn-vue 插槽slot"><img src="/img/cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="learn-vue 插槽slot"/></a><div class="content"><a class="title" href="/2022/10/09/learn-vue%20%E6%8F%92%E6%A7%BDslot/" title="learn-vue 插槽slot">learn-vue 插槽slot</a><time datetime="2022-10-09T09:12:50.000Z" title="发表于 2022-10-09 17:12:50">2022-10-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/09/learn-vue%20%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6/" title="learn-vue 动态组件"><img src="/img/cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="learn-vue 动态组件"/></a><div class="content"><a class="title" href="/2022/10/09/learn-vue%20%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6/" title="learn-vue 动态组件">learn-vue 动态组件</a><time datetime="2022-10-09T08:17:47.000Z" title="发表于 2022-10-09 16:17:47">2022-10-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/04/learn-vue%20%E9%80%92%E5%BD%92%E7%BB%84%E4%BB%B6/" title="learn-vue 递归组件"><img src="/img/cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="learn-vue 递归组件"/></a><div class="content"><a class="title" href="/2022/10/04/learn-vue%20%E9%80%92%E5%BD%92%E7%BB%84%E4%BB%B6/" title="learn-vue 递归组件">learn-vue 递归组件</a><time datetime="2022-10-04T13:50:00.000Z" title="发表于 2022-10-04 21:50:00">2022-10-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/04/learn-vue%20%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E4%BC%A0%E5%8F%82/" title="learn-vue 父子组件传参"><img src="/img/cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="learn-vue 父子组件传参"/></a><div class="content"><a class="title" href="/2022/10/04/learn-vue%20%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E4%BC%A0%E5%8F%82/" title="learn-vue 父子组件传参">learn-vue 父子组件传参</a><time datetime="2022-10-04T00:08:51.000Z" title="发表于 2022-10-04 08:08:51">2022-10-04</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/cover3.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2022 By Lerjiu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
